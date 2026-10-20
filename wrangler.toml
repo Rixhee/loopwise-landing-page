@@ -1,0 +1,9 @@
+name = "loopwise-landing-page"
+pages_build_output_dir = "public"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "loopwise"
+# Paste the id printed by `npx wrangler d1 create loopwise` (see README)
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loopwise: find out what makes your Etsy listings sell</title>
+<meta name="description" content="Loopwise tests small changes on your Etsy listings, one at a time, and shows you in your own numbers what actually works. Join the free beta.">
+<meta property="og:title" content="Loopwise: stop guessing what makes your listings sell">
+<meta property="og:description" content="Small, tested changes to your Etsy listings. You approve every change, we update Etsy, and you can undo in one click.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#1E6B4E">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="wrap nav" aria-label="Main">
+    <a href="#top" class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path d="M8 15a7 7 0 1 1 3.5 6.06" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M6.5 23.5l5-2.4-2.2-5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>loopwise</span>
+    </a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#history">Version history</a>
+      <a href="#faq">FAQ</a>
+      <a href="#signup" class="btn btn-sm" data-track="nav_cta">Get early access</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+<!-- HERO -->
+<section id="top" class="wrap hero">
+  <div class="hero-copy">
+    <p class="pill">For Etsy sellers · Free in beta</p>
+    <h1>Stop guessing what makes your listings sell.</h1>
+    <p class="lede">Loopwise tests small changes on your Etsy listings, one at a time, and shows you in your own numbers what actually works.</p>
+
+    <form class="signup-form hero-form" data-form="signup" data-location="hero" novalidate>
+      <label for="hero-email" class="sr-only">Your email</label>
+      <input id="hero-email" name="email" type="email" autocomplete="email" placeholder="you@yourshop.com" required>
+      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" class="btn">Get early access</button>
+      <p class="form-msg" role="status" aria-live="polite"></p>
+    </form>
+
+    <ul class="checks">
+      <li>You approve every change</li>
+      <li>We update Etsy for you</li>
+      <li>Undo in one click</li>
+    </ul>
+  </div>
+
+  <figure class="hero-visual">
+    <div class="browser">
+      <div class="browser-bar"><span></span><span></span><span></span><em>loopwise.app</em></div>
+      <div class="browser-body">
+        <div class="seg" role="group" aria-label="Example change">
+          <button type="button" class="seg-btn" aria-pressed="true" data-hero="title">Title change</button>
+          <button type="button" class="seg-btn" aria-pressed="false" data-hero="description">Description change</button>
+        </div>
+        <div class="listing-row">
+          <div class="listing-id">
+            <div class="thumb"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><path d="M6 8h11v11a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z" fill="none" stroke="#6A6F68" stroke-width="1.8"/><path d="M17 11h2a2.5 2.5 0 0 1 0 5h-2" fill="none" stroke="#6A6F68" stroke-width="1.8"/></svg></div>
+            <strong id="hero-name">So Many Books So Little Time Mug</strong>
+          </div>
+          <span class="badge badge-good">✓ Kept</span>
+        </div>
+        <div class="diff">
+          <div class="eyebrow">Old <span class="hero-field">title</span></div>
+          <div class="diff-old" id="hero-old">So Many Books So Little Time Mug, Funny Book Lover Coffee Cup, Bookish Gift, Librarian Mug</div>
+          <div class="eyebrow">New <span class="hero-field">title</span></div>
+          <div class="diff-new" id="hero-new">Book Lover Mug, 11oz Ceramic Coffee Cup, <mark>Gift for Readers</mark>, Bookish Gift for Her</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><small>14 days before</small><b>0</b><small>orders</small></div>
+          <svg class="stat-arrow" width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><path d="M2 10h22M17 3l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="stat stat-hot"><small>14 days after</small><b id="hero-after">2</b><small id="hero-unit">orders</small></div>
+        </div>
+      </div>
+    </div>
+    <figcaption><span id="hero-caption">One new title. Same listing. More orders.</span> <span class="muted">(Examples from our demo shop.)</span></figcaption>
+  </figure>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="band">
+  <div class="wrap section">
+    <p class="kicker">How it works</p>
+    <h2>Four steps, and you only do one of them.</h2>
+    <ol class="steps">
+      <li class="card step">
+        <span class="num">1</span>
+        <svg viewBox="0 0 220 120" aria-hidden="true">
+          <rect x="10" y="10" width="128" height="88" rx="10" fill="none" stroke="#B9B6AC" stroke-width="2" stroke-dasharray="6 5"/>
+          <rect x="22" y="20" width="48" height="50" rx="6" fill="#F4F3EE" stroke="#1B1D1A" stroke-width="2"/><path d="M28 58l10-12 8 8 6-6 12 10" fill="none" stroke="#1B1D1A" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="78" y="20" width="48" height="50" rx="6" fill="#F4F3EE" stroke="#1B1D1A" stroke-width="2"/><path d="M84 58l10-12 8 8 6-6 12 10" fill="none" stroke="#1B1D1A" stroke-width="2" stroke-linejoin="round"/>
+          <text x="46" y="88" text-anchor="middle" font-size="12" fill="#8E3524" font-weight="600">0 sales</text>
+          <text x="102" y="88" text-anchor="middle" font-size="12" fill="#8E3524" font-weight="600">0 sales</text>
+          <rect x="156" y="20" width="48" height="50" rx="6" fill="#F4F3EE" stroke="#B9B6AC" stroke-width="2"/><path d="M162 58l10-12 8 8 6-6 12 10" fill="none" stroke="#B9B6AC" stroke-width="2" stroke-linejoin="round"/>
+          <text x="180" y="88" text-anchor="middle" font-size="12" fill="#6A6F68">sells</text>
+          <text x="74" y="114" text-anchor="middle" font-size="11" fill="#5B605A">we find these</text>
+          <text x="180" y="114" text-anchor="middle" font-size="11" fill="#5B605A">left alone</text>
+        </svg>
+        <h3>We find the listings that just sit there.</h3>
+        <p>Views but no orders? Those are the ones we work on. Your best sellers stay untouched.</p>
+      </li>
+      <li class="card step">
+        <span class="num">2</span>
+        <svg viewBox="0 0 220 120" aria-hidden="true">
+          <rect x="18" y="10" width="70" height="92" rx="8" fill="#F4F3EE" stroke="#1B1D1A" stroke-width="2"/><path d="M26 50l14-14 10 10 8-8 22 18" fill="none" stroke="#1B1D1A" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M28 72h50M28 82h36M28 92h42" stroke="#1B1D1A" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M98 56h22M112 48l8 8-8 8" fill="none" stroke="#1B1D1A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="132" y="10" width="70" height="92" rx="8" fill="#F4F3EE" stroke="#1B1D1A" stroke-width="2"/><path d="M140 50l14-14 10 10 8-8 22 18" fill="none" stroke="#1B1D1A" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="136" y="65" width="62" height="14" rx="4" fill="#F6D78A" stroke="#1B1D1A" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <path d="M142 72h50" stroke="#1B1D1A" stroke-width="3" stroke-linecap="round"/>
+          <path d="M142 88h36M142 96h42" stroke="#1B1D1A" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="53" y="116" text-anchor="middle" font-size="11" fill="#5B605A">now</text>
+          <text x="167" y="116" text-anchor="middle" font-size="11" fill="#5B605A">one change</text>
+        </svg>
+        <h3>We suggest one change per listing.</h3>
+        <p>A sharper title, better tags, a clearer description, or a new <strong>thumbnail</strong>: the first photo shoppers see in search.</p>
+      </li>
+      <li class="card step">
+        <span class="num">3</span>
+        <svg viewBox="0 0 220 120" aria-hidden="true">
+          <circle cx="30" cy="50" r="15" fill="none" stroke="#B9B6AC" stroke-width="2"/><path d="M24 44l12 12M36 44l-12 12" stroke="#B9B6AC" stroke-width="2" stroke-linecap="round"/>
+          <text x="30" y="84" text-anchor="middle" font-size="11" fill="#6A6F68">skip</text>
+          <rect x="74" y="8" width="64" height="86" rx="8" fill="none" stroke="#B9B6AC" stroke-width="2" stroke-dasharray="5 4"/>
+          <g transform="rotate(12 120 52)"><rect x="90" y="8" width="64" height="86" rx="8" fill="#FFFFFF" stroke="#1B1D1A" stroke-width="2"/><path d="M98 44l12-12 9 9 7-7 20 16" fill="none" stroke="#1B1D1A" stroke-width="2" stroke-linejoin="round"/><rect x="96" y="58" width="52" height="11" rx="3" fill="#F6D78A"/><path d="M100 64h42M100 80h30" stroke="#1B1D1A" stroke-width="2.5" stroke-linecap="round"/></g>
+          <circle cx="190" cy="50" r="15" fill="#1E6B4E"/><path d="M183 50l5 5 9-10" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="190" y="84" text-anchor="middle" font-size="11" fill="#1B1D1A" font-weight="600">run it</text>
+          <path d="M92 112h44M128 105l8 7-8 7" fill="none" stroke="#1B1D1A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h3>Swipe right to run it.</h3>
+        <p>Approve it and we update the listing on Etsy for you. No copy-pasting. Swipe left to skip.</p>
+      </li>
+      <li class="card step">
+        <span class="num">4</span>
+        <svg viewBox="0 0 220 120" aria-hidden="true">
+          <path d="M20 10v86h190" fill="none" stroke="#1B1D1A" stroke-width="2"/>
+          <path d="M30 76l20 6 18-6 20 3" fill="none" stroke="#8A8F88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M88 79l22-12 22-6 22-14 22-8 22-20" fill="none" stroke="#1E6B4E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M88 14v82" stroke="#1B1D1A" stroke-width="1.6" stroke-dasharray="4 4"/>
+          <text x="94" y="22" font-size="11" fill="#1B1D1A" font-weight="600">change</text>
+          <text x="52" y="112" text-anchor="middle" font-size="11" fill="#5B605A">before</text>
+          <text x="150" y="112" text-anchor="middle" font-size="11" fill="#5B605A">until it’s clear</text>
+        </svg>
+        <h3>We measure until it’s clear.</h3>
+        <p>Views, favorites and orders before vs. after. Keep what works, roll back what doesn’t.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ONE SWIPE -->
+<section class="wrap section">
+  <h2 class="narrow">Improve a listing in one swipe, not one afternoon.</h2>
+  <div class="compare">
+    <div class="compare-old">
+      <p class="compare-label">On your own, for every listing</p>
+      <ol>
+        <li>Research keywords</li>
+        <li>Rewrite the listing and paste it into Etsy</li>
+        <li>Remember to check back in two weeks</li>
+        <li>Guess whether it helped</li>
+      </ol>
+    </div>
+    <div class="compare-new">
+      <p class="compare-label">With Loopwise</p>
+      <p class="swipe">Swipe right.</p>
+      <ul class="checks checks-lg">
+        <li>We write the change</li>
+        <li>We put it live on Etsy</li>
+        <li>We measure it</li>
+        <li>We tell you if it worked</li>
+        <li>Each result makes the next idea smarter</li>
+      </ul>
+    </div>
+  </div>
+  <p class="center strong">5 listings or 50, over one coffee.</p>
+</section>
+
+<!-- VERSION HISTORY -->
+<section id="history" class="dark">
+  <div class="wrap section">
+    <div class="narrow">
+      <p class="kicker kicker-light">See what’s working</p>
+      <h2>Every change, on the record.</h2>
+      <p class="lede lede-light">Each listing keeps a full version history: exactly what changed, and the views, orders and revenue since. Something not working? Restore any earlier version in one click and we put it back on Etsy.</p>
+    </div>
+
+    <div class="vh">
+      <div class="vh-head">
+        <div class="listing-id">
+          <div class="thumb"><svg width="22" height="22" viewBox="0 0 26 26" aria-hidden="true"><path d="M6 8h11v11a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3z" fill="none" stroke="#6A6F68" stroke-width="1.8"/><path d="M17 11h2a2.5 2.5 0 0 1 0 5h-2" fill="none" stroke="#6A6F68" stroke-width="1.8"/></svg></div>
+          <div><strong>Book Lover Mug, 11oz Ceramic Coffee Cup…</strong><small>Version history · 3 versions</small></div>
+        </div>
+        <span class="muted small">Click a version to see what changed</span>
+      </div>
+      <div class="vh-body">
+        <div class="vh-list" id="vh-list"></div>
+        <div class="vh-detail" id="vh-detail" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTROL -->
+<section class="wrap section">
+  <h2>You stay in control.</h2>
+  <p class="lede narrow">Nothing changes on your Etsy shop until you swipe right. When you do, we make the edit for you, and you can undo it any time.</p>
+  <ul class="control">
+    <li class="card">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 16.5l4 4 8-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>You approve every change</h3>
+      <p>We only suggest. Nothing goes live without your swipe.</p>
+    </li>
+    <li class="card">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="22" height="22" rx="5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 10v12M10 16h12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <h3>One small change at a time</h3>
+      <p>One edit per listing, so you know exactly what made the difference.</p>
+    </li>
+    <li class="card">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4l3.5 7.2 7.9 1.1-5.7 5.6 1.3 7.8L16 22l-7 3.7 1.3-7.8-5.7-5.6 7.9-1.1z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg>
+      <h3>Best sellers left alone</h3>
+      <p>Listings that already sell are off-limits unless you pick them.</p>
+    </li>
+    <li class="card">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 13a9 9 0 1 1 0 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M6 7v6h6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Undo in one click</h3>
+      <p>Every version is saved. Restore any of them and we put it back on Etsy.</p>
+    </li>
+  </ul>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="band">
+  <div class="wrap section faq">
+    <h2>Questions</h2>
+    <details open data-faq="auto-update">
+      <summary>When I approve a change, does it update my Etsy listing automatically?</summary>
+      <p>Yes. Once you swipe right, we make the edit on Etsy for you. Nothing changes before that, and you can restore the old version in one click.</p>
+    </details>
+    <details data-faq="what-changes">
+      <summary>What can it change?</summary>
+      <p>Titles, tags, descriptions, and photo order. Photo order matters because your first photo is the thumbnail shoppers see in search results, so it’s often the first thing that decides whether they click.</p>
+    </details>
+    <details data-faq="best-sellers">
+      <summary>Will it touch listings that already sell?</summary>
+      <p>No. We focus on listings that get views but few or no orders. Your best sellers are left alone unless you choose to test them.</p>
+    </details>
+    <details data-faq="how-many">
+      <summary>How many listings can I test at once?</summary>
+      <p>As many as you like. Each listing runs one change at a time, but you can have dozens of listings testing in parallel.</p>
+    </details>
+    <details data-faq="how-long">
+      <summary>How long until I see results?</summary>
+      <p>Usually about two weeks per change. If it’s too close to call, we keep measuring a little longer, or you can choose a version yourself.</p>
+    </details>
+    <details data-faq="password">
+      <summary>Do you need my Etsy password?</summary>
+      <p>No. You connect your shop through Etsy’s own sign-in, and you can disconnect any time.</p>
+    </details>
+    <details data-faq="cost">
+      <summary>What does it cost?</summary>
+      <p>It’s free during the beta. Early-access sellers will hear about pricing first.</p>
+    </details>
+  </div>
+</section>
+
+<!-- SIGNUP + CONTACT -->
+<section id="signup" class="wrap section cta-row">
+  <div class="cta-main">
+    <h2>Find out what sells in your shop.</h2>
+    <p>Get early access, free during the beta. We’re a small team, so you’ll be talking to the people building it.</p>
+    <form class="signup-form stacked" data-form="signup" data-location="footer" novalidate>
+      <div class="field">
+        <label for="foot-email">Email</label>
+        <input id="foot-email" name="email" type="email" autocomplete="email" placeholder="you@yourshop.com" required>
+      </div>
+      <div class="field">
+        <label for="foot-listings">How many active listings do you have? (optional)</label>
+        <select id="foot-listings" name="listings">
+          <option value="">Choose one</option>
+          <option>Under 20</option>
+          <option>20–100</option>
+          <option>100–500</option>
+          <option>500+</option>
+        </select>
+      </div>
+      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" class="btn btn-dark">Get early access</button>
+      <p class="form-msg" role="status" aria-live="polite"></p>
+      <p class="fine">We’ll only email you about early access. No spam, unsubscribe any time.</p>
+    </form>
+  </div>
+
+  <div class="cta-contact">
+    <h2>Questions first?</h2>
+    <p>Send us a note. We read every one and usually reply within a day.</p>
+    <form class="stacked" data-form="contact" novalidate>
+      <div class="field"><label for="c-name">Name</label><input id="c-name" name="name" type="text" autocomplete="name"></div>
+      <div class="field"><label for="c-email">Email</label><input id="c-email" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="c-msg">Message</label><textarea id="c-msg" name="message" rows="4" required></textarea></div>
+      <input type="text" name="company" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" class="btn btn-outline">Send message</button>
+      <p class="form-msg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer">
+    <span class="brand brand-sm">loopwise</span>
+    <span>The term “Etsy” is a trademark of Etsy, Inc. Loopwise is not endorsed or certified by Etsy, Inc.</span>
+  </div>
+</footer>
+
+</body>
+</html>

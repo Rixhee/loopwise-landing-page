@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Loopwise stats</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+:root { --ink:#1B1D1A; --muted:#5B605A; --line:#E3E1D9; --paper:#FBFAF7; --accent:#1E6B4E; --soft:#E3F0E9; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, sans-serif; background: var(--paper); color: var(--ink); font-size: 15px; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+h2 { font-size: 17px; margin: 0 0 10px; }
+p.sub { color: var(--muted); margin: 0 0 20px; }
+form { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+input { flex: 1 1 240px; min-height: 44px; padding: 0 12px; border: 1.5px solid #CFCCC1; border-radius: 10px; font: inherit; }
+button, .dl { min-height: 44px; padding: 0 16px; border: 0; border-radius: 10px; background: var(--accent); color: #fff; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+.dl { background: #fff; color: var(--ink); border: 1.5px solid var(--ink); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.tile { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.tile b { display: block; font-size: 30px; line-height: 1.1; }
+.tile span { color: var(--muted); font-size: 13px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
+.card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 16px; overflow-x: auto; }
+.card.wide { grid-column: 1 / -1; }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 7px 8px 7px 0; border-top: 1px solid #EEECE5; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; border-top: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.downloads { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; }
+.err { color: #8E3524; font-weight: 600; }
+.empty { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Loopwise stats</h1>
+  <p class="sub">Visitors, signups and what people click on. Only you can see this, with your admin key.</p>
+  <form id="f">
+    <label for="k" style="position:absolute;left:-9999px">Admin key</label>
+    <input id="k" type="password" placeholder="Admin key" autocomplete="current-password">
+    <button type="submit">Load stats</button>
+  </form>
+  <p id="msg" role="status"></p>
+  <div id="out" hidden>
+    <div class="tiles" id="tiles"></div>
+    <div class="downloads" id="downloads"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+<script>
+(function () {
+  var f = document.getElementById('f'), k = document.getElementById('k'), msg = document.getElementById('msg');
+  try { k.value = sessionStorage.getItem('lw_admin') || ''; } catch (e) {}
+
+  function el(t, c, txt) { var e = document.createElement(t); if (c) e.className = c; if (txt != null) e.textContent = txt; return e; }
+  function table(title, rows, cols, wide) {
+    var card = el('div', 'card' + (wide ? ' wide' : ''));
+    card.appendChild(el('h2', '', title));
+    if (!rows || !rows.length) { card.appendChild(el('p', 'empty', 'Nothing yet.')); return card; }
+    var t = el('table'), hr = el('tr');
+    cols.forEach(function (c) { hr.appendChild(el('th', c[2] ? 'num' : '', c[1])); });
+    var th = el('thead'); th.appendChild(hr); t.appendChild(th);
+    var tb = el('tbody');
+    rows.forEach(function (r) {
+      var tr = el('tr');
+      cols.forEach(function (c) { tr.appendChild(el('td', c[2] ? 'num' : '', r[c[0]] == null ? '' : r[c[0]])); });
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); card.appendChild(t); return card;
+  }
+
+  function load(key) {
+    msg.textContent = 'Loading…'; msg.className = '';
+    fetch('/api/admin/stats', { headers: { Authorization: 'Bearer ' + key } })
+      .then(function (r) { if (r.status === 401) throw new Error('Wrong admin key.'); if (!r.ok) throw new Error('Could not load stats.'); return r.json(); })
+      .then(function (d) {
+        try { sessionStorage.setItem('lw_admin', key); } catch (e) {}
+        msg.textContent = '';
+        document.getElementById('out').hidden = false;
+        var tiles = document.getElementById('tiles'); tiles.textContent = '';
+        [['Unique visitors', d.totals.visitors], ['Page views', d.totals.pageViews], ['Signups', d.totals.signups],
+         ['Visitor → signup', (d.totals.conversion * 100).toFixed(1) + '%'], ['Messages', d.totals.messages]]
+          .forEach(function (x) { var t = el('div', 'tile'); t.appendChild(el('b', '', x[1])); t.appendChild(el('span', '', x[0])); tiles.appendChild(t); });
+
+        var dl = document.getElementById('downloads'); dl.textContent = '';
+        ['signups', 'messages', 'events'].forEach(function (name) {
+          var a = el('a', 'dl', 'Download ' + name + ' (CSV)');
+          a.href = '/api/admin/export?table=' + name + '&key=' + encodeURIComponent(key);
+          dl.appendChild(a);
+        });
+
+        var g = document.getElementById('grid'); g.textContent = '';
+        g.appendChild(table('By source (?src= tag)', d.bySource, [['source', 'Source'], ['visitors', 'Visitors', 1], ['signups', 'Signups', 1]]));
+        g.appendChild(table('Last 30 days', d.byDay, [['day', 'Day'], ['visitors', 'Visitors', 1], ['signups', 'Signups', 1]]));
+        g.appendChild(table('How far people scroll', d.sections, [['section', 'Section reached'], ['visitors', 'Visitors', 1]]));
+        g.appendChild(table('FAQ questions opened', d.faqs, [['question', 'Question'], ['opens', 'Opens', 1]]));
+        g.appendChild(table('Interactions', d.interactions, [['action', 'Action'], ['n', 'Count', 1]]));
+        g.appendChild(table('Shop size of signups', d.listings, [['listings', 'Active listings'], ['n', 'Signups', 1]]));
+        g.appendChild(table('Visitors by country', d.byCountry, [['country', 'Country'], ['visitors', 'Visitors', 1]]));
+        g.appendChild(table('Recent signups', d.recentSignups, [['email', 'Email'], ['listings', 'Listings'], ['source', 'Source'], ['location', 'Form'], ['country', 'Country'], ['created_at', 'When (UTC)']], true));
+        g.appendChild(table('Messages', d.recentMessages, [['name', 'Name'], ['email', 'Email'], ['message', 'Message'], ['created_at', 'When (UTC)']], true));
+      })
+      .catch(function (e) { msg.textContent = e.message; msg.className = 'err'; });
+  }
+
+  f.addEventListener('submit', function (e) { e.preventDefault(); if (k.value) load(k.value); });
+  if (k.value) load(k.value);
+})();
+</script>
+</body>
+</html>
