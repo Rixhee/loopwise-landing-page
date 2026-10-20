@@ -31,7 +31,11 @@ wrangler.toml      Cloudflare config
 
 The `/admin` page then shows visitors and signups for each source, which gives you conversion per channel.
 
-## Deploy to Cloudflare (one time, about 10 minutes)
+## Deploy to Cloudflare
+
+**Quickest:** run `npx wrangler login`, then `bash scripts/setup-cloudflare.sh`. The script creates the database and tables, deploys the site, and asks you to choose the /admin password. After any later change, run `npm run deploy`.
+
+### Manual steps (what the script does)
 
 You need a free Cloudflare account and Node.js installed.
 
