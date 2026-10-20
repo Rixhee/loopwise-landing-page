@@ -1,4 +1,4 @@
--- Loopwise landing page database (Cloudflare D1 / SQLite)
+-- Initial tables. IF NOT EXISTS so this is harmless on a database created before migrations were used.
 
 CREATE TABLE IF NOT EXISTS signups (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,            -- page_view, section_view, click, faq_open, hero_toggle, version_click, restore_click, signup
+  name TEXT NOT NULL,
   detail TEXT DEFAULT '',
   source TEXT DEFAULT '',
   campaign TEXT DEFAULT '',

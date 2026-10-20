@@ -10,7 +10,7 @@ One-page early-access site for Loopwise. It explains the product and collects em
 public/            the website (index.html, styles.css, app.js, admin/)
 functions/api/     signup, contact, event, admin/stats, admin/export
 lib/util.js        shared helpers for the functions
-schema.sql         database tables: signups, messages, events
+migrations/        database tables (signups, messages, events), one file per change
 wrangler.toml      Cloudflare config
 ```
 
@@ -49,7 +49,7 @@ npx wrangler d1 create loopwise        # prints a database_id
 1. Paste the printed `database_id` into `wrangler.toml` in place of `REPLACE_WITH_YOUR_D1_DATABASE_ID`.
 2. Create the tables:
    ```bash
-   npm run db:init:remote
+   npm run db:migrate:remote
    ```
 3. Create the site and deploy:
    ```bash
@@ -102,7 +102,7 @@ Add both `loopwise.app` and `www.loopwise.app` so either one works.
 
 ```bash
 npm install
-npm run db:init:local
+npm run db:migrate:local
 echo "ADMIN_KEY=dev" > .dev.vars
 npm run dev                            # http://localhost:8788  and  /admin (key: dev)
 ```
@@ -112,6 +112,20 @@ npm run dev                            # http://localhost:8788  and  /admin (key
 ```bash
 npx wrangler d1 execute loopwise --remote --command "SELECT email, listings, source, created_at FROM signups ORDER BY id DESC LIMIT 20"
 ```
+
+## Bots and your own visits
+
+New sites get visited by automated scanners within minutes of going live. To keep the numbers honest:
+
+- Every event is stored, but each one is checked against its browser signature, signs of an automated browser, a missing language header, and whether it came from a cloud or hosting network (where scanners run). Suspected bots are flagged, not deleted.
+- A browser only counts as a **real visitor** once it scrolls, taps, clicks or types, and only if none of its events were flagged.
+- **Your own visits are excluded.** Opening `/admin` marks that browser as "you." On your phone or other devices, visit the site once with `?internal=1`; `?internal=0` undoes it.
+- `/admin` shows what was left out and why ("Not counted as visitors, and why"), and the events CSV includes `is_bot`, `bot_reason` and the network for each row.
+- Signups are never rejected for looking like a bot, because real people use VPNs. They're flagged so you can check them yourself.
+
+## Changing the database
+
+Add a new numbered file in `migrations/`, such as `0003_something.sql`. The deploy workflow applies only the files that haven't run yet. To apply one by hand, run `npm run db:migrate:remote`.
 
 ## Notes
 

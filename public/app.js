@@ -21,6 +21,26 @@
     }
   } catch (e) {}
 
+  // ---------- Who's visiting: us, or a bot? ----------
+  // Visit with ?internal=1 once (or open /admin) and this browser is marked as "us" from then on.
+  // ?internal=0 clears it.
+  var internal = false;
+  try {
+    var ip = params.get('internal');
+    if (ip === '1') localStorage.setItem('lw_internal', '1');
+    if (ip === '0') localStorage.removeItem('lw_internal');
+    internal = localStorage.getItem('lw_internal') === '1';
+  } catch (e) {}
+
+  // Signs of an automated browser. Sent along so the server can flag the visit.
+  var automation = '';
+  try {
+    if (navigator.webdriver) automation = 'webdriver';
+    else if (/HeadlessChrome|PhantomJS|Puppeteer|Playwright/i.test(navigator.userAgent)) automation = 'headless-ua';
+    else if (!navigator.languages || navigator.languages.length === 0) automation = 'no-languages';
+    else if (window.outerWidth === 0 || window.outerHeight === 0) automation = 'no-window';
+  } catch (e) {}
+
   // ---------- Lightweight event tracking (stored in our own D1 database) ----------
   function track(name, detail) {
     var body = JSON.stringify({
@@ -30,7 +50,9 @@
       campaign: campaign,
       referrer: document.referrer || '',
       path: location.pathname,
-      vid: visitorId
+      vid: visitorId,
+      internal: internal ? 1 : 0,
+      automation: automation
     });
     try {
       if (navigator.sendBeacon) {
@@ -41,6 +63,24 @@
     } catch (e) {}
   }
   track('page_view');
+
+  // A visitor only counts as a real person once they interact: scroll, tap, click, type or move the mouse.
+  // Scanners that load the page and leave never send this.
+  var engaged = false;
+  var loadedAt = Date.now();
+  function markEngaged(e) {
+    if (engaged) return;
+    if (e.type === 'scroll' && window.scrollY < 40) return;
+    if (e.type === 'pointermove' && Date.now() - loadedAt < 400) return;
+    engaged = true;
+    ['scroll', 'pointerdown', 'pointermove', 'keydown', 'touchstart'].forEach(function (t) {
+      window.removeEventListener(t, markEngaged, true);
+    });
+    track('engaged', e.type + ':' + Math.round((Date.now() - loadedAt) / 1000) + 's');
+  }
+  ['scroll', 'pointerdown', 'pointermove', 'keydown', 'touchstart'].forEach(function (t) {
+    window.addEventListener(t, markEngaged, { capture: true, passive: true });
+  });
 
   // Scroll depth + which sections people actually reach
   var seen = {};
@@ -220,6 +260,8 @@
       data.referrer = document.referrer || '';
       data.location = form.getAttribute('data-location') || '';
       data.vid = visitorId;
+      data.internal = internal ? 1 : 0;
+      data.automation = automation;
       data.elapsed = Date.now() - startedAt;
 
       btn.disabled = true;

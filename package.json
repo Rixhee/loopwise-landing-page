@@ -5,8 +5,8 @@
   "description": "Loopwise early-access landing page (Cloudflare Pages + D1)",
   "scripts": {
     "dev": "wrangler pages dev",
-    "db:init:local": "wrangler d1 execute loopwise --local --file=schema.sql",
-    "db:init:remote": "wrangler d1 execute loopwise --remote --file=schema.sql",
+    "db:migrate:local": "wrangler d1 migrations apply loopwise --local",
+    "db:migrate:remote": "wrangler d1 migrations apply loopwise --remote",
     "deploy": "wrangler pages deploy --project-name getloopwise --branch main --commit-dirty=true"
   },
   "devDependencies": {

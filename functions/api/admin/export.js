@@ -1,9 +1,9 @@
 import { json, isAdmin } from '../../../lib/util.js';
 
 const TABLES = {
-  signups: 'SELECT id, email, listings, location, source, campaign, referrer, country, region, city, created_at FROM signups ORDER BY id',
+  signups: 'SELECT id, email, listings, location, source, campaign, referrer, country, region, city, internal, bot_reason, created_at FROM signups ORDER BY id',
   messages: 'SELECT id, name, email, message, source, country, created_at FROM messages ORDER BY id',
-  events: 'SELECT id, name, detail, source, campaign, referrer, path, visitor_id, country, created_at FROM events ORDER BY id'
+  events: 'SELECT id, name, detail, source, campaign, referrer, path, visitor_id, country, is_bot, bot_reason, internal, asn, as_org, user_agent, created_at FROM events ORDER BY id'
 };
 
 function csvCell(v) {

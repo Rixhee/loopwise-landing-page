@@ -40,12 +40,12 @@ jobs:
       - name: Install
         run: npm install --no-audit --no-fund
 
-      - name: Apply database schema (safe to re-run)
+      - name: Apply database migrations (only new ones run)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: d1 execute loopwise --remote --file=schema.sql --yes
+          command: d1 migrations apply loopwise --remote
 
       - name: Deploy
         id: deploy

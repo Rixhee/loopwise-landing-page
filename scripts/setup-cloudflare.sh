@@ -32,8 +32,8 @@ if [ -z "$DB_ID" ]; then echo "Could not create or find the D1 database."; exit 
 echo "    database id: $DB_ID"
 sed -i.bak -E "s/^database_id = \".*\"/database_id = \"$DB_ID\"/" wrangler.toml && rm -f wrangler.toml.bak
 
-echo "==> Creating tables"
-$W d1 execute "$DB" --remote --file=schema.sql --yes >/dev/null
+echo "==> Creating / upgrading tables"
+CI=true $W d1 migrations apply "$DB" --remote
 
 echo "==> Pages project"
 $W pages project create "$PROJECT" --production-branch main >/dev/null 2>&1 || echo "    (already exists)"

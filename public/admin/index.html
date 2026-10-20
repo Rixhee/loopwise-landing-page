@@ -37,7 +37,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 <body>
 <div class="wrap">
   <h1>Loopwise stats</h1>
-  <p class="sub">Visitors, signups and what people click on. Only you can see this, with your admin key.</p>
+  <p class="sub">Visitors, signups and what people click on. Only you can see this, with your admin key.<br>
+  “Real visitors” are browsers that scrolled, tapped or clicked, weren’t flagged as bots, and aren’t you. Opening this page marks your browser as “you” on the site; use <code>?internal=1</code> on your phone too.</p>
   <form id="f">
     <label for="k" style="position:absolute;left:-9999px">Admin key</label>
     <input id="k" type="password" placeholder="Admin key" autocomplete="current-password">
@@ -77,12 +78,13 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
     fetch('/api/admin/stats', { headers: { Authorization: 'Bearer ' + key } })
       .then(function (r) { if (r.status === 401) throw new Error('Wrong admin key.'); if (!r.ok) throw new Error('Could not load stats.'); return r.json(); })
       .then(function (d) {
-        try { sessionStorage.setItem('lw_admin', key); } catch (e) {}
+        try { sessionStorage.setItem('lw_admin', key); localStorage.setItem('lw_internal', '1'); } catch (e) {}
         msg.textContent = '';
         document.getElementById('out').hidden = false;
         var tiles = document.getElementById('tiles'); tiles.textContent = '';
-        [['Unique visitors', d.totals.visitors], ['Page views', d.totals.pageViews], ['Signups', d.totals.signups],
-         ['Visitor → signup', (d.totals.conversion * 100).toFixed(1) + '%'], ['Messages', d.totals.messages]]
+        [['Real visitors', d.totals.visitors], ['Signups', d.totals.signups],
+         ['Visitor → signup', (d.totals.conversion * 100).toFixed(1) + '%'], ['Messages', d.totals.messages],
+         ['Raw page loads (incl. bots & you)', d.totals.rawVisitors], ['Flagged as bots', d.totals.botVisitors]]
           .forEach(function (x) { var t = el('div', 'tile'); t.appendChild(el('b', '', x[1])); t.appendChild(el('span', '', x[0])); tiles.appendChild(t); });
 
         var dl = document.getElementById('downloads'); dl.textContent = '';
@@ -100,7 +102,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
         g.appendChild(table('Interactions', d.interactions, [['action', 'Action'], ['n', 'Count', 1]]));
         g.appendChild(table('Shop size of signups', d.listings, [['listings', 'Active listings'], ['n', 'Signups', 1]]));
         g.appendChild(table('Visitors by country', d.byCountry, [['country', 'Country'], ['visitors', 'Visitors', 1]]));
-        g.appendChild(table('Recent signups', d.recentSignups, [['email', 'Email'], ['listings', 'Listings'], ['source', 'Source'], ['location', 'Form'], ['country', 'Country'], ['created_at', 'When (UTC)']], true));
+        g.appendChild(table('Not counted as visitors, and why', d.filtered, [['why', 'Reason'], ['visitors', 'Browsers', 1], ['networks', 'Networks seen']], true));
+        g.appendChild(table('Recent signups', d.recentSignups, [['email', 'Email'], ['listings', 'Listings'], ['source', 'Source'], ['location', 'Form'], ['country', 'Country'], ['created_at', 'When (UTC)'], ['flag', 'Flag']], true));
         g.appendChild(table('Messages', d.recentMessages, [['name', 'Name'], ['email', 'Email'], ['message', 'Message'], ['created_at', 'When (UTC)']], true));
       })
       .catch(function (e) { msg.textContent = e.message; msg.className = 'err'; });
