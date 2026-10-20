@@ -25,9 +25,9 @@ wrangler.toml      Cloudflare config
 
 **Track where signups come from** by adding `?src=` to every link you share, e.g.
 
-- `https://loopwise.pages.dev/?src=reddit`
-- `https://loopwise.pages.dev/?src=interview`
-- `https://loopwise.pages.dev/?src=instagram`
+- `https://getloopwise.pages.dev/?src=reddit`
+- `https://getloopwise.pages.dev/?src=interview`
+- `https://getloopwise.pages.dev/?src=instagram`
 
 The `/admin` page then shows visitors and signups for each source, which gives you conversion per channel.
 
@@ -53,24 +53,50 @@ npx wrangler d1 create loopwise        # prints a database_id
    ```
 3. Create the site and deploy:
    ```bash
-   npx wrangler pages project create loopwise-landing-page --production-branch main
+   npx wrangler pages project create getloopwise --production-branch main
    npm run deploy
    ```
-   Wrangler prints the live URL (something like `https://loopwise-landing-page.pages.dev`).
+   Wrangler prints the live URL (something like `https://getloopwise.pages.dev`).
 4. Set the admin password for `/admin` (pick any long random string):
    ```bash
-   npx wrangler pages secret put ADMIN_KEY --project-name loopwise-landing-page
+   npx wrangler pages secret put ADMIN_KEY --project-name getloopwise
    npm run deploy
    ```
-5. Turn on Web Analytics: Cloudflare dashboard → **Workers & Pages** → `loopwise-landing-page` → **Metrics** → **Enable Web Analytics**. Then redeploy once (`npm run deploy`) so the snippet is injected.
+5. Turn on Web Analytics: Cloudflare dashboard → **Workers & Pages** → `getloopwise` → **Metrics** → **Enable Web Analytics**. Then redeploy once (`npm run deploy`) so the snippet is injected.
 
-### Optional: auto-deploy on every `git push`
+## Auto-deploy on every push (GitHub Actions)
 
-In the dashboard, go to Workers & Pages → Create → Pages → **Connect to Git**, then pick `Rixhee/loopwise-landing-page`. Set the build command to empty and the output directory to `public`. Under Settings → Bindings, add a **D1 database** binding named `DB` pointing to `loopwise`. Under Settings → Variables and Secrets, add `ADMIN_KEY`. After that, every push to `main` goes live.
+`.github/workflows/deploy.yml` deploys the site whenever anything is pushed:
 
-### Optional: custom domain
+- a push to `main` updates the live site
+- a push to any other branch gets its own preview link, shown in the Actions log
 
-Workers & Pages → your project → **Custom domains** → add something like `loopwise.app` if you buy one.
+One-time setup, so GitHub is allowed to deploy to your Cloudflare account:
+
+1. **Create a Cloudflare API token.** Go to dash.cloudflare.com → My Profile → API Tokens → Create Token → Create Custom Token, and give it these permissions:
+   - Account → **Cloudflare Pages** → Edit
+   - Account → **D1** → Edit
+
+   Copy the token.
+2. **Find your account ID.** Run `npx wrangler whoami`, or copy it from the right sidebar of any Cloudflare dashboard page.
+3. **Add both to GitHub.** Open the repo → Settings → Secrets and variables → Actions → New repository secret, and add:
+   - `CLOUDFLARE_API_TOKEN` = the token
+   - `CLOUDFLARE_ACCOUNT_ID` = the account ID
+
+   Or, with the GitHub CLI: `gh secret set CLOUDFLARE_API_TOKEN` and `gh secret set CLOUDFLARE_ACCOUNT_ID`.
+4. Push anything (or Actions → Deploy to Cloudflare Pages → Run workflow). The site redeploys in about a minute.
+
+The `/admin` password (`ADMIN_KEY`) lives in Cloudflare, not GitHub, so it carries over between deploys.
+
+## Custom domain
+
+The free address is `https://getloopwise.pages.dev`. To use your own domain, like `loopwise.app`:
+
+1. Buy the domain. Cloudflare Registrar (dashboard → Domain Registration) sells at cost, about $10–15 a year for a .com. Any registrar, such as Namecheap or Porkbun, works too.
+2. In Cloudflare, go to Workers & Pages → `getloopwise` → **Custom domains** → Set up a custom domain, and type the domain.
+3. If the domain is on Cloudflare, it connects automatically. If not, Cloudflare shows a CNAME record to add at your registrar. HTTPS is set up for you either way.
+
+Add both `loopwise.app` and `www.loopwise.app` so either one works.
 
 ## Run it locally
 

@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-PROJECT="loopwise-landing-page"
+PROJECT="getloopwise"
 DB="loopwise"
 W="npx --yes wrangler"
 

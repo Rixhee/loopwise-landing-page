@@ -7,7 +7,7 @@
     "dev": "wrangler pages dev",
     "db:init:local": "wrangler d1 execute loopwise --local --file=schema.sql",
     "db:init:remote": "wrangler d1 execute loopwise --remote --file=schema.sql",
-    "deploy": "wrangler pages deploy --project-name loopwise-landing-page --branch main --commit-dirty=true"
+    "deploy": "wrangler pages deploy --project-name getloopwise --branch main --commit-dirty=true"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

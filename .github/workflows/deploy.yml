@@ -1,0 +1,47 @@
+name: Deploy to Cloudflare Pages
+
+# Every push deploys the site:
+#   push to main        -> the live site
+#   push to any branch  -> a preview link (shown in the Actions log and on PRs)
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Apply database schema (safe to re-run)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: d1 execute loopwise --remote --file=schema.sql --yes
+
+      - name: Deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy --project-name=getloopwise --branch=${{ github.ref_name }} --commit-hash=${{ github.sha }}
+
+      - name: Show URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.deployment-url }}"

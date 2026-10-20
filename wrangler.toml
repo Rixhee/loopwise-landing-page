@@ -6,4 +6,4 @@ compatibility_date = "2026-10-01"
 binding = "DB"
 database_name = "loopwise"
 # Paste the id printed by `npx wrangler d1 create loopwise` (see README)
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "91d08608-9fa3-47f3-b409-630962c88a7a"
